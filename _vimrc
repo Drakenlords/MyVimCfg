@@ -1,9 +1,9 @@
- "______           _              _                   _     
- "|  _  \         | |            | |                 | |    
- "| | | |_ __ __ _| | _____ _ __ | |     ___  _ __ __| |___ 
- "| | | | '__/ _` | |/ / _ \ '_ \| |    / _ \| '__/ _` / __|
- "| |/ /| | | (_| |   <  __/ | | | |___| (_) | | | (_| \__ \
- "|___/ |_|  \__,_|_|\_\___|_| |_\_____/\___/|_|  \__,_|___/  
+"______           _              _                   _     
+"|  _  \         | |            | |                 | |    
+"| | | |_ __ __ _| | _____ _ __ | |     ___  _ __ __| |___ 
+"| | | | '__/ _` | |/ / _ \ '_ \| |    / _ \| '__/ _` / __|
+"| |/ /| | | (_| |   <  __/ | | | |___| (_) | | | (_| \__ \
+"|___/ |_|  \__,_|_|\_\___|_| |_\_____/\___/|_|  \__,_|___/  
 "---------- syntax and sets ----------
 syntax on
 set number
@@ -15,36 +15,50 @@ set encoding=UTF-8
 set showmatch
 set guifont=Cascadia_Code
 set sw=4
-set relativenumber
+"set relativenumber
 let mapleader = " "
 set shiftwidth=4
 set tabstop=4
+set expandtab
 set laststatus=2
 set backspace=2
 set guioptions-=T
 set guioptions-=L
 imap jk <Esc>
+set spell
+set spelllang=es,en
+let g:gruvbox_italic=1
 "---------- syntax and sets ----------
-"---------- Mapping to reload config ----------
+"---------- Mapping ----------
+nmap <leader>nf :Goyo! <CR>
+nmap <leader>fs :Goyo 100 <CR>
+nmap <leader>fq :q! <CR>
+nmap <leader>fw :w! <CR>
+nmap <leader>es :wq <CR>
 nmap <leader>so :source $HOME\_vimrc<CR>
 nmap <leader>w :w <CR>
 nmap <leader>q :q <CR>
-"---------- Mapping to reload config ----------
+nmap <Leader>nt :NERDTreeFind<CR>
+nmap <Leader>s <Plug>(easymotion-s2)
+
+"---------- Mapping ----------
 "---------- Fonts ----------
 if has("gui_running")
 
   if has("gui_gtk2")
-    set guifont=Cascadia_Code\ 16
-  elseif has("gui_macvim")
-    set guifont=Cascadia_Code\Regular:h16
+  set guifont=Cascadia_Code\ 15
+    elseif has("gui_macvim")
+    set guifont=Cascadia_Code\Regular:h15
   elseif has("gui_win32")
-    set guifont=Cascadia_Code:h16:cANSI:qDRAFT
+  set guifont=Cascadia_Code:h15:cANSI:qDRAFT
   endif
 endif
 "---------- Fonts ----------
 "---------- Plugins ----------
 call plug#begin('~/.vim/plugged')
-" Temas
+"goyoVim
+Plug 'junegunn/goyo.vim'
+"Temas
 Plug 'morhetz/gruvbox'
 Plug 'tomasiser/vim-code-dark'
 "IDE
@@ -55,8 +69,10 @@ Plug 'preservim/nerdtree'
 Plug 'christoomey/vim-tmux-navigator'
 "lightline
 Plug 'itchyny/lightline.vim'
+"Indentline
+Plug 'yggdroot/indentline'
 "identGuide
-Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'nathanaelkane/vim-indent-guides'
 "delimitmate
 Plug 'raimondi/delimitmate'
 "devIcons
@@ -69,28 +85,26 @@ Plug 'alvan/vim-closetag'
 Plug 'mattn/emmet-vim'
 "neoclide complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"FzF
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 "---------- Plugins ----------
 "---------- some configs ----------
 "IndentGuide
-let g:indent_guides_auto_colors = 1
+"let g:indent_guides_auto_colors = 1
+"let g:indent_guides_enable_on_vim_startup = 1 
+
+"indentline
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_enabled = 1
 
 "ligthline config
 set laststatus=2
-let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ }
-
-"identGuideConfig
-let g:indent_guides_enable_on_vim_startup = 1 
-nmap <Leader>nt :NERDTreeFind<CR>
-nmap <Leader>s <Plug>(easymotion-s2)
-
 "gruvbox
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
 set bg:dark
-"let g:gruvbox_termcolors=256
 
 "Nerdtree
 autocmd VimEnter * NERDTree
@@ -99,6 +113,14 @@ nnoremap <leader>gd :NERDTree D:\<CR>
 nnoremap <leader>gc :NERDTree C:\<CR>
 nnoremap <leader>pg :"*p<CR>
 let NERDTreeShowHidden=1
+"Emmet
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+"escribe html:5 y luego presionar Ctrl+y,
+"goyoVim
+let g:goyo_width=100
+let g:goyo_height=100
+let g:goyo_linenr=100
 "---------- some configs ----------
 
 "------------------------------------------------------------------------------------------
@@ -159,10 +181,93 @@ let g:closetag_close_shortcut = '<leader>>'
 let g:webdevicons_enable = 1
 let g:webdevicons_enable_nerdtree = 1
 let g:webdevicons_enable_airline_tabline = 1
+let g:webdevicons_enable_vimfiler = 1
+let g:webdevicons_enable_ctrlp = 1
+let g:lightline = {
+      \ 'colorscheme': 'seoul256',
+      \ 'component_function': {
+      \   'filetype': 'MyFiletype',
+      \   'fileformat': 'MyFileformat',
+      \ }
+      \ }
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
 "----------------------------------------------------------
 "config devicons
 "----------------------------------------------------------
+"----------------------------------------------------------
+"fzf Config
+"---------------------------------------------------------
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.5, 'highlight': 'Comment' } }
+"This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - Popup window (center of the screen)
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+" - Popup window (center of the current window)
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
+
+" - Popup window (anchored to the bottom of the current window)
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+" - down / up / left / right
+let g:fzf_layout = { 'down': '40%' }
+
+" - Window using a Vim command
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': '10new' }
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Enable per-command history
+" - History files will be stored in the specified directory
+" - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
+"   'previous-history' instead of 'down' and 'up'.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+"----------------------------------------------------------
+"fzf config
+"----------------------------------------------------------
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -188,4 +293,3 @@ let g:webdevicons_enable_airline_tabline = 1
 "@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
