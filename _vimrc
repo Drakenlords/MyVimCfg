@@ -25,13 +25,15 @@ set backspace=2
 set guioptions-=T
 set guioptions-=L
 imap jk <Esc>
+"set cursorline
 set spell
 set spelllang=es,en
 let g:gruvbox_italic=1
+hi CursorLine term=italic cterm=bold guibg=Grey40
 "---------- syntax and sets ----------
 "---------- Mapping ----------
 nmap <leader>nf :Goyo! <CR>
-nmap <leader>fs :Goyo 100 <CR>
+nmap <silent>fs :Goyo <CR>
 nmap <leader>fq :q! <CR>
 nmap <leader>fw :w! <CR>
 nmap <leader>es :wq <CR>
@@ -58,6 +60,7 @@ endif
 call plug#begin('~/.vim/plugged')
 "goyoVim
 Plug 'junegunn/goyo.vim'
+Plug 'amix/vim-zenroom2'
 "Temas
 Plug 'morhetz/gruvbox'
 Plug 'tomasiser/vim-code-dark'
@@ -71,8 +74,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'itchyny/lightline.vim'
 "Indentline
 Plug 'yggdroot/indentline'
-"identGuide
-"Plug 'nathanaelkane/vim-indent-guides'
+Plug 'michaeljsmith/vim-indent-object'
 "delimitmate
 Plug 'raimondi/delimitmate'
 "devIcons
@@ -85,16 +87,15 @@ Plug 'alvan/vim-closetag'
 Plug 'mattn/emmet-vim'
 "neoclide complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Multiple cursor
+Plug 'terryma/vim-multiple-cursors'
 "FzF
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
 call plug#end()
 "---------- Plugins ----------
 "---------- some configs ----------
-"IndentGuide
-"let g:indent_guides_auto_colors = 1
-"let g:indent_guides_enable_on_vim_startup = 1 
-
 "indentline
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_enabled = 1
@@ -105,13 +106,28 @@ set laststatus=2
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
 set bg:dark
+"Multicursor
+let g:multi_cursor_use_default_mapping=1
+function! Multiple_cursors_before()
+  if exists(':NeoCompleteLock')==2
+    exe 'NeoCompleteLock'
+  endif
+endfunction
 
+function! Multiple_cursors_after()
+  if exists(':NeoCompleteUnlock')==2
+    exe 'NeoCompleteUnlock'
+  endif
+endfunction
 "Nerdtree
 autocmd VimEnter * NERDTree
+autocmd VimEnter * NERDTree | wincmd p
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>gd :NERDTree D:\<CR>
 nnoremap <leader>gc :NERDTree C:\<CR>
 nnoremap <leader>pg :"*p<CR>
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 let NERDTreeShowHidden=1
 "Emmet
 let g:user_emmet_install_global = 0
@@ -123,10 +139,9 @@ let g:goyo_height=100
 let g:goyo_linenr=100
 "---------- some configs ----------
 
-"------------------------------------------------------------------------------------------
+"----------
 "config Close tag                                                              
-"-----------------------------------------------------------------------------------------
-
+"----------
 " filenames like *.xml, *.html, *.xhtml, ...
 " These are the file extensions where this plugin is enabled.
 "
@@ -170,9 +185,9 @@ let g:closetag_shortcut = '>'
 "
 let g:closetag_close_shortcut = '<leader>>'
 
-"------------------------------------------------------------------------------------------
+"----------
 "config Close tag                                                              
-"-----------------------------------------------------------------------------------------
+"----------
 
 
 "----------------------------------------------------------
@@ -265,6 +280,7 @@ let g:fzf_colors =
 " - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
 "   'previous-history' instead of 'down' and 'up'.
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+
 "----------------------------------------------------------
 "fzf config
 "----------------------------------------------------------
