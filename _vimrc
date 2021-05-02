@@ -13,7 +13,7 @@ set showcmd
 set ruler
 set encoding=UTF-8
 set showmatch
-set guifont=Cascadia_Code
+set guifont=MesloLGL_NF
 set sw=4
 "set relativenumber
 let mapleader = " "
@@ -25,7 +25,6 @@ set backspace=2
 set guioptions-=T
 set guioptions-=L
 imap jk <Esc>
-"set cursorline
 set spell
 set spelllang=es,en
 let g:gruvbox_italic=1
@@ -48,11 +47,11 @@ nmap <Leader>s <Plug>(easymotion-s2)
 if has("gui_running")
 
   if has("gui_gtk2")
-  set guifont=Cascadia_Code\ 15
+  set guifont=MesloLGL_NF\\15
     elseif has("gui_macvim")
-    set guifont=Cascadia_Code\Regular:h15
+    set guifont=MesloLGL_NF\Regular:h15
   elseif has("gui_win32")
-  set guifont=Cascadia_Code:h15:cANSI:qDRAFT
+  set guifont=MesloLGL_NF:h15:b:cANSI:qDRAFT
   endif
 endif
 "---------- Fonts ----------
@@ -64,6 +63,7 @@ Plug 'amix/vim-zenroom2'
 "Temas
 Plug 'morhetz/gruvbox'
 Plug 'tomasiser/vim-code-dark'
+Plug 'katawful/kat.vim' "alternativa ideal
 "IDE
 Plug 'easymotion/vim-easymotion'
 "Nerdtree
