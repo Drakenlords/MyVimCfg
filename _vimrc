@@ -10,6 +10,7 @@ set number
 set mouse=a
 set clipboard=unnamed
 set showcmd
+filetype plugin indent on
 set ruler
 set encoding=UTF-8
 set showmatch
@@ -19,6 +20,8 @@ set sw=4
 let mapleader = " "
 set shiftwidth=4
 set tabstop=4
+set softtabstop=4
+set autoindent
 set expandtab
 set laststatus=2
 set backspace=2
@@ -27,8 +30,17 @@ set guioptions-=L
 imap jk <Esc>
 set spell
 set spelllang=es,en
+set fileformats=unix,dos,mac
 let g:gruvbox_italic=1
 hi CursorLine term=italic cterm=bold guibg=Grey40
+nnoremap <c-p> :Files<cr>
+au BufNewFile,BufRead *.py,*.java,*.cpp,*.c,*.cs,*.rkt,*.h,*.html
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=120 |
+    \ set expandtab |
+    \ set autoindent |
 "---------- syntax and sets ----------
 "---------- Mapping ----------
 nmap <leader>nf :Goyo! <CR>
@@ -93,6 +105,10 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
+"syntastic
+Plug 'vim-syntastic/syntastic'
+"pylint
+Plug 'vim-scripts/pylint.vim'
 call plug#end()
 "---------- Plugins ----------
 "---------- some configs ----------
@@ -125,7 +141,6 @@ autocmd VimEnter * NERDTree | wincmd p
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>gd :NERDTree D:\<CR>
 nnoremap <leader>gc :NERDTree C:\<CR>
-nnoremap <leader>pg :"*p<CR>
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
     \ quit | endif
 let NERDTreeShowHidden=1
@@ -137,6 +152,15 @@ autocmd FileType html,css EmmetInstall
 let g:goyo_width=100
 let g:goyo_height=100
 let g:goyo_linenr=100
+"syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['pylint']
 "---------- some configs ----------
 
 "----------
