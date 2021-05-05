@@ -5,14 +5,18 @@
 "| |/ /| | | (_| |   <  __/ | | | |___| (_) | | | (_| \__ \
 "|___/ |_|  \__,_|_|\_\___|_| |_\_____/\___/|_|  \__,_|___/  
 "---------- syntax and sets ----------
-syntax on
+syntax enable
 set number
 set mouse=a
-set clipboard=unnamed
+set clipboard=unnamedplus
 set showcmd
+set cmdheight=1
 filetype plugin indent on
 set ruler
+set splitbelow
+set splitright
 set encoding=UTF-8
+set fileencoding=UTF-8
 set showmatch
 set guifont=MesloLGL_NF
 set sw=4
@@ -21,15 +25,18 @@ let mapleader = " "
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
+set smarttab
 set autoindent
 set expandtab
-set laststatus=2
+set laststatus=0
 set backspace=2
 set guioptions-=T
 set guioptions-=L
+set nowrap
+set noshowmode
 imap jk <Esc>
-set spell
-set spelllang=es,en
+"set spell
+"set spelllang=es,en
 set fileformats=unix,dos,mac
 let g:gruvbox_italic=1
 hi CursorLine term=italic cterm=bold guibg=Grey40
@@ -53,7 +60,18 @@ nmap <leader>w :w <CR>
 nmap <leader>q :q <CR>
 nmap <Leader>nt :NERDTreeFind<CR>
 nmap <Leader>s <Plug>(easymotion-s2)
-
+nnoremap <TAB> :bnext<CR>
+nnoremap <S-TAB> :bprevious<CR>
+"alt + hjkl resize windows
+nnoremap <M-j> :resize -2<CR>
+nnoremap <M-k> :resize +2<CR>
+nnoremap <M-h> :vertical resize -2<CR>
+nnoremap <M-l> :vertical resize +2<CR>
+"moverse entre ventanas
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 "---------- Mapping ----------
 "---------- Fonts ----------
 if has("gui_running")
@@ -109,6 +127,8 @@ Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
 Plug 'vim-syntastic/syntastic'
 "pylint
 Plug 'vim-scripts/pylint.vim'
+"Polyglot
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 "---------- Plugins ----------
 "---------- some configs ----------
@@ -121,7 +141,8 @@ set laststatus=2
 "gruvbox
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
-set bg:dark
+"let bg:dark
+set t_Co=256
 "Multicursor
 let g:multi_cursor_use_default_mapping=1
 function! Multiple_cursors_before()
